@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { company } from '@/content/company';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,17 +7,30 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
+        disallow: ['/api/', '/admin/'],
       },
       {
-        userAgent: 'Googlebot',
+        userAgent: ['Googlebot', 'Googlebot-Image', 'Bingbot', 'DuckDuckBot'],
         allow: '/',
+        disallow: ['/api/', '/admin/'],
       },
+
       {
-        userAgent: 'Bingbot',
+        userAgent: [
+          'GPTBot',
+          'ChatGPT-User',
+          'OAI-SearchBot',
+          'ClaudeBot',
+          'anthropic-ai',
+          'Google-Extended',
+          'PerplexityBot',
+          'CCBot',
+        ],
         allow: '/',
+        disallow: ['/api/', '/admin/'],
       },
     ],
-    sitemap: 'https://aditamapsychocare.com/sitemap.xml',
-    host: 'https://aditamapsychocare.com',
+    sitemap: `${company.canonicalUrl}/sitemap.xml`,
+    host: company.canonicalUrl,
   };
 }

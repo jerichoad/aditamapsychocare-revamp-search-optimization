@@ -1,107 +1,52 @@
-'use client';
+import { yearsOfExperience } from '@/content/company';
 
-import { useEffect, useState, useRef } from 'react';
+const STATS = [
+  {
 
-function Counter({
-  endValue,
-  suffix = '',
-}: {
-  endValue: number;
-  suffix?: string;
-}) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    let observer: IntersectionObserver;
-    let startTimestamp: number | null = null;
-    const duration = 2000; // 2 seconds
-
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-
-      // easeOutExpo
-      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-
-      setCount(Math.floor(easeProgress * endValue));
-
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      } else {
-        setCount(endValue);
-      }
-    };
-
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting) {
-        window.requestAnimationFrame(step);
-        if (observer && ref.current) observer.unobserve(ref.current);
-      }
-    };
-
-    observer = new IntersectionObserver(handleIntersect, { threshold: 0.1 });
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (observer && ref.current) observer.unobserve(ref.current);
-    };
-  }, [endValue]);
-
-  return (
-    <h3
-      ref={ref}
-      className="text-4xl md:text-5xl font-extrabold text-primary mb-2 tracking-tight"
-    >
-      {count.toLocaleString('id-ID')}
-      {suffix}
-    </h3>
-  );
-}
+    value: `${yearsOfExperience()}+`,
+    label: 'Tahun Pengalaman',
+    description: 'Mendedikasikan diri di bidang psikologi dengan integritas.',
+  },
+  {
+    value: '50.000+',
+    label: 'Siswa Didampingi',
+    description: 'Membantu menemukan potensi dan jurusan yang tepat.',
+  },
+  {
+    value: '150+',
+    label: 'Instansi Bekerja Sama',
+    description: 'Berbagai sekolah dan perusahaan swasta terkemuka.',
+  },
+] as const;
 
 export default function Statistics() {
-  const stats = [
-    {
-      numericValue: 23,
-      suffix: '+',
-      label: 'Tahun Pengalaman',
-      description: 'Mendedikasikan diri di bidang psikologi dengan integritas.',
-    },
-    {
-      numericValue: 50000,
-      suffix: '+',
-      label: 'Siswa Didampingi',
-      description: 'Membantu menemukan potensi dan jurusan yang tepat.',
-    },
-    {
-      numericValue: 150,
-      suffix: '+',
-      label: 'Instansi Bekerja Sama',
-      description: 'Berbagai sekolah dan perusahaan swasta terkemuka.',
-    },
-  ];
-
   return (
-    <section className="py-16 bg-white border-y border-gray-100">
+    <section
+      aria-labelledby="statistik-heading"
+      className="py-16 bg-white border-y border-gray-100"
+    >
+      <h2 id="statistik-heading" className="sr-only">
+        Aditama Psychocare dalam Angka
+      </h2>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-          {stats.map((stat, index) => (
+        <dl className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+          {STATS.map((stat) => (
             <div
-              key={index}
+              key={stat.label}
               className="flex flex-col items-center text-center px-4 py-6"
             >
-              <Counter endValue={stat.numericValue} suffix={stat.suffix} />
-              <p className="text-xl font-bold text-gray-900 mb-2">
+              <dt className="text-xl font-bold text-gray-900 mb-2 order-2">
                 {stat.label}
-              </p>
-              <p className="text-gray-600 leading-relaxed max-w-xs">
+              </dt>
+              <dd className="text-4xl md:text-5xl font-extrabold text-primary mb-2 tracking-tight order-1">
+                {stat.value}
+              </dd>
+              <dd className="text-gray-600 leading-relaxed max-w-xs order-3">
                 {stat.description}
-              </p>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );
